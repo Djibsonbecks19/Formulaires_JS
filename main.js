@@ -1,32 +1,13 @@
-const professeurs = [
-    { 
-        id: 1, 
-        nom: "Wane", 
-        prenom: "Baila", 
+let professeurs = [];
 
-    },
-    { 
-        id: 2, 
-        nom: "LO", 
-        prenom: "Mahmadane", 
-    },
-    { 
-        id: 3, 
-        nom: "Sabaly", 
-        prenom: "Adama", 
 
-    },
-];
 
-/* Recuperation du formulaire par son id*/
 const form = document.getElementById("createForm");
-/* Recuperation des champs par leurs Ids*/
 const nomElem = document.getElementById("nom");
 const prenomElem = document.getElementById("prenom");
 
 const formFields = [nomElem, prenomElem];
 
-/* Application d'un ecouteur d'evenement sur le formulaire*/
 form.addEventListener("submit", (e)=>{
     e.preventDefault();
     for (const field of formFields) {
@@ -36,11 +17,21 @@ form.addEventListener("submit", (e)=>{
         }
         showSuccessMessage(field);
     }
+
+    const newProf = { 
+        id: professeurs.length + 1, 
+        nom: nomElem.value, 
+        prenom: prenomElem.value
+    };
+    saveDataProf(newProf);
+    
+
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    genererDataProfesseur();
+    loadData();
     activateFocus();
+    genererDataProfesseur();
 });
 
 //const inputs = [nomElem, prenomElem];
@@ -100,6 +91,8 @@ const tbody = document.getElementById("tbodyProfs");
 document.getElementById("btnOpenForm").addEventListener("click", openForm);
 document.getElementById("closeForm").addEventListener("click", closeForm);
 
+
+// Fonction d'accès aux données
 function genererDataProfesseur() {
     tbody.innerHTML = "";
     professeurs.forEach((professeur) => {
@@ -107,7 +100,6 @@ function genererDataProfesseur() {
         row.innerHTML = `
             <td>${professeur.nom}</td>
             <td>${professeur.prenom}</td>
-            <td>${professeur.specialite}</td>
             <td>
                 <button class="btn btn-sm btn-warning">Modifier</button>
                 <button class="btn btn-sm btn-danger">Supprimer</button>
@@ -117,6 +109,18 @@ function genererDataProfesseur() {
     });
 }
 
+function loadData(){
+    professeurs = localStorage.key("professeurs") != null ? JSON.parse(localStorage.getItem("professeurs")) : [];
+}
+
+
+function saveDataProf(newProf) {
+    professeurs.push(newProf);
+    genererDataProfesseur();
+    closeForm('createForm');
+
+    localStorage.setItem("professeurs", JSON.stringify(professeurs));
+}
 
 function openForm() {
     form.style.display = "block";
