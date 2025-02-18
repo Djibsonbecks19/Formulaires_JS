@@ -1,11 +1,13 @@
 let professeurs = [];
 
 const form = document.getElementById("createForm");
+console.log(form.elements[0])
 
-const nomElem = document.getElementById("nom");
+/*
+const nomElem = form.elements["nom"];
 const prenomElem = document.getElementById("prenom");
 const gradeElem = document.getElementById("grade");
-
+*/
 
 const checkboxMatieres =  document.querySelectorAll("input[type=checkbox]");
 const checkboxError = document.getElementById("checkboxError");
@@ -24,18 +26,22 @@ for (const checkbox of checkboxMatieres) {
             checkbox.classList.add('is-invalid')
         }
     })
-
 }
+
+
     
 //})
 
 
-const formFields = [nomElem, prenomElem, gradeElem];
+//const formFields = [nomElem, prenomElem, gradeElem];
+const formFieldsValidation = ["nom","prenom","grade"];
 
-form.addEventListener("submit", (e)=>{
+form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    for (const field of formFields) {
+    for (const fieldId of formFieldsValidation) {
+        let field = form.elements[fieldId];
+    
         if(isEmpty(field)){
             showErrorMessage(field);
             return; 
@@ -43,14 +49,24 @@ form.addEventListener("submit", (e)=>{
         showSuccessMessage(field);
     }
 
+    
+    const elementsChoisis = document.querySelectorAll(".form-check-input:checked")
+    if(elementsChoisis.length == 0){
+        checkboxError.textContent = "Veillez cocher au moins une matière";
+        return;
+    }
+    checkboxError.textContent = "";
+
+
     const newProf = { 
         id: professeurs.length + 1, 
         nom: nomElem.value, 
         prenom: prenomElem.value,
-        grade: gradeElem.value
+        grade: gradeElem.value,
+        matieres: Array.from(elementsChoisis).map(element => element.value)
     };
     saveDataProf(newProf);
-    
+    form.reset()
 
 });
 
@@ -122,11 +138,13 @@ document.getElementById("closeForm").addEventListener("click", closeForm);
 function genererDataProfesseur() {
     tbody.innerHTML = "";
     professeurs.forEach((professeur) => {
+        const badges = professeur.matieres.map(matiere => `<span class="badge text-bg-primary mr-1">${matiere}</span>`);
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${professeur.nom}</td>
             <td>${professeur.prenom}</td>
             <td>${professeur.grade}</td>
+            <td>${badges}</td>
             <td>
                 <button class="btn btn-sm btn-warning">Modifier</button>
                 <button class="btn btn-sm btn-danger">Supprimer</button>
