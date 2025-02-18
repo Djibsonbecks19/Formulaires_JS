@@ -3,11 +3,10 @@ let professeurs = [];
 const form = document.getElementById("createForm");
 console.log(form.elements[0])
 
-/*
 const nomElem = form.elements["nom"];
 const prenomElem = document.getElementById("prenom");
 const gradeElem = document.getElementById("grade");
-*/
+
 
 const checkboxMatieres =  document.querySelectorAll("input[type=checkbox]");
 const checkboxError = document.getElementById("checkboxError");
@@ -27,8 +26,6 @@ for (const checkbox of checkboxMatieres) {
         }
     })
 }
-
-
     
 //})
 
