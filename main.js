@@ -1,15 +1,40 @@
 let professeurs = [];
 
-
-
 const form = document.getElementById("createForm");
+
 const nomElem = document.getElementById("nom");
 const prenomElem = document.getElementById("prenom");
+const gradeElem = document.getElementById("grade");
 
-const formFields = [nomElem, prenomElem];
+
+const checkboxMatieres =  document.querySelectorAll("input[type=checkbox]");
+const checkboxError = document.getElementById("checkboxError");
+
+
+//checkboxMatieres.forEach((checkbox) => {
+//Array.from(checkboxMatieres).filter(checkbox => checkbox.checked);
+
+for (const checkbox of checkboxMatieres) {
+    checkbox.addEventListener('change', () => {
+        if(checkbox.checked){
+            checkbox.classList.remove('is-invalid')
+            checkbox.classList.add('is-valid')
+        } else {
+            checkbox.classList.remove('is-valid')
+            checkbox.classList.add('is-invalid')
+        }
+    })
+
+}
+    
+//})
+
+
+const formFields = [nomElem, prenomElem, gradeElem];
 
 form.addEventListener("submit", (e)=>{
     e.preventDefault();
+
     for (const field of formFields) {
         if(isEmpty(field)){
             showErrorMessage(field);
@@ -21,7 +46,8 @@ form.addEventListener("submit", (e)=>{
     const newProf = { 
         id: professeurs.length + 1, 
         nom: nomElem.value, 
-        prenom: prenomElem.value
+        prenom: prenomElem.value,
+        grade: gradeElem.value
     };
     saveDataProf(newProf);
     
@@ -100,6 +126,7 @@ function genererDataProfesseur() {
         row.innerHTML = `
             <td>${professeur.nom}</td>
             <td>${professeur.prenom}</td>
+            <td>${professeur.grade}</td>
             <td>
                 <button class="btn btn-sm btn-warning">Modifier</button>
                 <button class="btn btn-sm btn-danger">Supprimer</button>
